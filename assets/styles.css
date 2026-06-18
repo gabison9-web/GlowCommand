@@ -1,0 +1,799 @@
+/* ============================================================
+   COMMAND PANEL — Smart Command Guide
+   Shared widget styles + 4 themes + display modes
+   ============================================================ */
+
+/* ---------- Type imports ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=JetBrains+Mono:wght@400..700&display=swap');
+
+/* ---------- Base reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'ss02';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+input, select, textarea { font: inherit; color: inherit; }
+
+/* ============================================================
+   THEME TOKENS — 4 distinct themes, single source of truth
+   ============================================================ */
+
+:root,
+[data-theme="pastel-dream"] {
+  --paper:        #fdf6f1;
+  --paper-2:      #f7e9ef;
+  --paper-3:      #efd9e6;
+  --ink:          #3a234a;
+  --ink-soft:     #6b4978;
+  --ink-mute:     #9b85a8;
+  --accent:       #d678a8;       /* dusty rose */
+  --accent-2:     #b8a0e0;       /* soft lavender */
+  --accent-3:     #f5b8d0;       /* blush */
+  --highlight:    #ffd6e6;
+  --line:         #e9c8d8;
+  --glow:         255, 200, 220;
+  --bg-grad:
+    radial-gradient(120% 90% at 8% 0%,  #f9d8e4 0%,  transparent 55%),
+    radial-gradient(110% 95% at 100% 12%, #e2d2f5 0%, transparent 60%),
+    radial-gradient(140% 100% at 50% 110%, #fff1cf 0%, transparent 60%),
+    linear-gradient(180deg, #fcf2f6 0%, #f5e6ee 100%);
+  --shimmer:
+    conic-gradient(from 120deg at 50% 50%,
+      rgba(214,120,168,.18), rgba(184,160,224,.18),
+      rgba(255,214,230,.18), rgba(255,241,207,.18),
+      rgba(214,120,168,.18));
+  --card-bg:      linear-gradient(180deg, #fffaf6 0%, #fdeef4 100%);
+  --card-shadow:  0 1px 0 rgba(255,255,255,.9) inset, 0 30px 60px -25px rgba(150, 80, 130, .35), 0 6px 14px -6px rgba(150, 80, 130, .25);
+  --pictogram:    #c25d97;
+}
+
+[data-theme="night-glow"] {
+  --paper:        #15102a;
+  --paper-2:      #1d1638;
+  --paper-3:      #271d4a;
+  --ink:          #f3ecff;
+  --ink-soft:     #c4b8e6;
+  --ink-mute:     #8f82b8;
+  --accent:       #8af0d8;       /* neon mint */
+  --accent-2:     #c5a7ff;       /* lavender neon */
+  --accent-3:     #ff9ec7;       /* pastel rose */
+  --highlight:    #1e1640;
+  --line:         #382a64;
+  --glow:         170, 140, 255;
+  --bg-grad:
+    radial-gradient(110% 80% at 12% 8%,  rgba(140, 90, 200, .55) 0%,  transparent 55%),
+    radial-gradient(100% 80% at 100% 18%, rgba(80, 200, 200, .35) 0%, transparent 60%),
+    radial-gradient(140% 90% at 50% 110%, rgba(255, 140, 200, .25) 0%, transparent 60%),
+    linear-gradient(180deg, #100a22 0%, #1a1238 100%);
+  --shimmer:
+    conic-gradient(from 220deg at 50% 50%,
+      rgba(140, 240, 216, .18), rgba(197, 167, 255, .18),
+      rgba(255, 158, 199, .18), rgba(140, 240, 216, .18));
+  --card-bg:      linear-gradient(180deg, rgba(40, 30, 75, .8) 0%, rgba(28, 20, 55, .92) 100%);
+  --card-shadow:  0 1px 0 rgba(255,255,255,.06) inset, 0 30px 60px -20px rgba(0,0,0,.6), 0 0 40px -10px rgba(170,140,255,.4);
+  --pictogram:    #8af0d8;
+}
+
+[data-theme="cozy-warm"] {
+  --paper:        #fdf3e7;
+  --paper-2:      #f7e3cd;
+  --paper-3:      #f0d2b3;
+  --ink:          #4a2e1e;
+  --ink-soft:     #7a553a;
+  --ink-mute:     #b18f6e;
+  --accent:       #d97a4e;       /* terracotta */
+  --accent-2:     #e8a878;       /* dusty peach */
+  --accent-3:     #f4cf8a;       /* butter */
+  --highlight:    #ffe7c5;
+  --line:         #e8c8a4;
+  --glow:         240, 180, 130;
+  --bg-grad:
+    radial-gradient(120% 90% at 8% 0%,  #ffd9b8 0%,  transparent 55%),
+    radial-gradient(110% 95% at 100% 12%, #ffe6c0 0%, transparent 60%),
+    radial-gradient(140% 100% at 50% 110%, #f8c8a0 0%, transparent 60%),
+    linear-gradient(180deg, #fdf2e3 0%, #f6dfc4 100%);
+  --shimmer:
+    conic-gradient(from 80deg at 50% 50%,
+      rgba(217, 122, 78, .15), rgba(244, 207, 138, .18),
+      rgba(255, 217, 184, .18), rgba(217, 122, 78, .15));
+  --card-bg:      linear-gradient(180deg, #fffaf2 0%, #fbe9d3 100%);
+  --card-shadow:  0 1px 0 rgba(255,255,255,.9) inset, 0 30px 60px -25px rgba(160, 80, 30, .3), 0 6px 14px -6px rgba(160, 80, 30, .22);
+  --pictogram:    #c66738;
+}
+
+[data-theme="nature-calm"] {
+  --paper:        #f3f0e3;
+  --paper-2:      #e6e2cd;
+  --paper-3:      #d2cfb5;
+  --ink:          #2a3a26;
+  --ink-soft:     #5a6c4f;
+  --ink-mute:     #94a085;
+  --accent:       #6b8e4e;       /* moss */
+  --accent-2:     #a8b878;       /* olive */
+  --accent-3:     #c8a578;       /* clay */
+  --highlight:    #e8efd2;
+  --line:         #c8cfb0;
+  --glow:         150, 180, 110;
+  --bg-grad:
+    radial-gradient(120% 90% at 8% 0%,  #d8e3c0 0%,  transparent 55%),
+    radial-gradient(110% 95% at 100% 12%, #e7e0c0 0%, transparent 60%),
+    radial-gradient(140% 100% at 50% 110%, #cfdcb5 0%, transparent 60%),
+    linear-gradient(180deg, #f3f0e0 0%, #e3decd 100%);
+  --shimmer:
+    conic-gradient(from 200deg at 50% 50%,
+      rgba(107, 142, 78, .15), rgba(168, 184, 120, .18),
+      rgba(232, 239, 210, .18), rgba(107, 142, 78, .15));
+  --card-bg:      linear-gradient(180deg, #fafaee 0%, #ece7d0 100%);
+  --card-shadow:  0 1px 0 rgba(255,255,255,.9) inset, 0 30px 60px -25px rgba(60, 80, 40, .3), 0 6px 14px -6px rgba(60, 80, 40, .22);
+  --pictogram:    #5a7d40;
+}
+
+/* ============================================================
+   STAGE — the visible widget surface (transparent for OBS)
+   ============================================================ */
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--ink);
+  isolation: isolate;
+}
+
+/* Decorative ambient backdrop (only in showcase, not in OBS widget) */
+.stage[data-bg="ambient"]::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--bg-grad);
+  z-index: -2;
+}
+.stage[data-bg="ambient"]::after {
+  content: '';
+  position: absolute; inset: -10%;
+  background: var(--shimmer);
+  filter: blur(80px) saturate(1.1);
+  opacity: .55;
+  mix-blend-mode: soft-light;
+  z-index: -1;
+  animation: drift 28s linear infinite;
+}
+@keyframes drift {
+  0%   { transform: rotate(0deg)   scale(1.05); }
+  50%  { transform: rotate(180deg) scale(1.15); }
+  100% { transform: rotate(360deg) scale(1.05); }
+}
+
+/* Subtle grain overlay */
+.stage::before, .stage::after { pointer-events: none; }
+.grain {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background-image:
+    radial-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
+    radial-gradient(rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+  background-position: 0 0, 1px 2px;
+  mix-blend-mode: overlay;
+  opacity: .55;
+}
+
+/* ============================================================
+   PANEL — common shell wrapping any display mode
+   ============================================================ */
+
+.panel {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  display: grid;
+  gap: 14px;
+  z-index: 2;
+}
+
+/* Header strip above the live cards */
+.panel-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.panel-bar .label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-weight: 600;
+}
+.panel-bar .label::before {
+  content: '';
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(var(--glow), .9);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+.panel-bar .total {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: .14em;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.25); opacity: .65; }
+}
+
+/* ============================================================
+   COMMAND CARD — used in all modes, scaled by container
+   ============================================================ */
+
+.cmd-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 22px;
+  padding: 26px 28px 24px;
+  border-radius: 26px;
+  background: var(--card-bg);
+  border: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+/* Iridescent shimmer baked into card */
+.cmd-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(60% 80% at 100% 0%, rgba(var(--glow), .25) 0%, transparent 60%),
+    radial-gradient(70% 80% at 0% 100%, rgba(var(--glow), .18) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Notched corner ribbon for category */
+.cmd-card .ribbon {
+  position: absolute;
+  top: 0; left: 24px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px 6px;
+  border-radius: 0 0 12px 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 18px -6px rgba(var(--glow), .7);
+}
+[data-theme="nature-calm"] .cmd-card .ribbon,
+[data-theme="cozy-warm"]  .cmd-card .ribbon { color: #fff8ee; }
+.cmd-card .ribbon::before {
+  content: '';
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #fff;
+  opacity: .9;
+}
+
+/* Pinned star marker on top-right */
+.cmd-card .pin {
+  position: absolute;
+  top: 14px; right: 16px;
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  color: var(--accent);
+  opacity: 0;
+  transform: rotate(-12deg) scale(.8);
+  transition: opacity .3s, transform .3s;
+}
+.cmd-card[data-pinned="true"] .pin { opacity: 1; transform: rotate(0deg) scale(1); }
+
+.cmd-card .body {
+  display: grid; gap: 8px; align-content: end;
+  margin-top: 22px;
+  min-width: 0;
+}
+
+.cmd-card .name {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: clamp(28px, 4.2vw, 40px);
+  line-height: 1.05;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cmd-card .name .bang {
+  color: var(--accent);
+  font-weight: 700;
+  margin-right: 2px;
+  text-shadow: 0 0 14px rgba(var(--glow), .6);
+}
+
+.cmd-card .desc {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 400;
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  max-width: 46ch;
+}
+
+.cmd-card .pictogram {
+  align-self: end;
+  width: 92px; height: 92px;
+  display: grid; place-items: center;
+  border-radius: 22px;
+  background:
+    radial-gradient(80% 80% at 30% 25%, color-mix(in oklab, var(--accent) 26%, transparent) 0%, transparent 70%),
+    color-mix(in oklab, var(--paper-2) 80%, transparent);
+  border: 1px solid color-mix(in oklab, var(--line) 60%, transparent);
+  color: var(--pictogram);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+}
+.cmd-card .pictogram svg { width: 50px; height: 50px; }
+
+/* Top-right progress arc (was bottom — moved to fill the empty top-right corner
+   and avoid overlapping the pictogram which sits bottom-right of the card body) */
+.cmd-card .progress {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 36px; height: 36px;
+  transform: rotate(-90deg);
+}
+.cmd-card .progress circle {
+  fill: none;
+  stroke-width: 3;
+}
+.cmd-card .progress .track  { stroke: color-mix(in oklab, var(--line) 80%, transparent); }
+.cmd-card .progress .fill   { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset .25s linear; }
+.cmd-card .progress-label {
+  position: absolute;
+  top: 24px; right: 56px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+
+/* Pin moves to bottom-right since progress now occupies top-right.
+   Pin is rare (only when a command is explicitly pinned). */
+.cmd-card .pin {
+  top: auto;
+  bottom: 14px;
+}
+
+/* ============================================================
+   MODE: ROTATING CARDS  (single hero, auto-rotates)
+   ============================================================ */
+
+.mode-rotating .stack {
+  position: relative;
+  min-height: 220px;
+}
+
+.mode-rotating .cmd-card {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(18px) scale(.985);
+  transition: opacity .55s cubic-bezier(.2,.9,.25,1), transform .55s cubic-bezier(.2,.9,.25,1);
+  pointer-events: none;
+}
+.mode-rotating .cmd-card.is-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.mode-rotating .cmd-card.is-leaving {
+  opacity: 0;
+  transform: translateY(-22px) scale(.985);
+}
+
+/* Bottom dotted index */
+.dots {
+  display: flex; justify-content: center; gap: 8px;
+  padding: 4px 0 0;
+}
+.dots .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: color-mix(in oklab, var(--ink-mute) 50%, transparent);
+  transition: width .3s, background .3s;
+}
+.dots .dot.is-active {
+  width: 22px; border-radius: 4px;
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(var(--glow), .6);
+}
+
+/* ============================================================
+   MODE: GRID PANEL  (multiple visible at once)
+   ============================================================ */
+
+.mode-grid .grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+}
+.mode-grid .cmd-card {
+  padding: 18px 20px 18px;
+  border-radius: 20px;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+}
+.mode-grid .cmd-card .ribbon {
+  position: static;
+  border-radius: 999px;
+  padding: 3px 9px 4px;
+  font-size: 9px;
+  letter-spacing: .18em;
+  align-self: start;
+  margin-top: 2px;
+  box-shadow: none;
+}
+.mode-grid .cmd-card .body { margin-top: 0; gap: 4px; }
+.mode-grid .cmd-card .name { font-size: 19px; white-space: nowrap; }
+.mode-grid .cmd-card .desc { font-size: 13px; line-height: 1.4; max-width: none;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.mode-grid .cmd-card .pictogram { display: none; }
+.mode-grid .cmd-card .progress, .mode-grid .cmd-card .progress-label { display: none; }
+.mode-grid .cmd-card .pin { top: 10px; right: 10px; width: 20px; height: 20px; }
+.mode-grid .cmd-card .pin svg { width: 16px; height: 16px; }
+
+.mode-grid .cmd-card.is-highlight {
+  outline: 2px solid color-mix(in oklab, var(--accent) 70%, transparent);
+  outline-offset: -2px;
+  animation: glowPulse 2s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% { box-shadow: var(--card-shadow), 0 0 0 0 rgba(var(--glow), 0); }
+  50%      { box-shadow: var(--card-shadow), 0 0 22px 2px rgba(var(--glow), .55); }
+}
+
+/* Card enter stagger */
+.mode-grid .cmd-card {
+  animation: cardIn .55s cubic-bezier(.2,.9,.25,1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(10px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ============================================================
+   MODE: SCROLL  (vertical marquee)
+   ============================================================ */
+
+.mode-scroll .scroll-frame {
+  position: relative;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 22px;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+          mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+}
+.mode-scroll .marquee {
+  display: grid;
+  gap: 12px;
+  padding: 8px 4px;
+  animation: marquee var(--scroll-dur, 28s) linear infinite;
+}
+.mode-scroll:hover .marquee { animation-play-state: paused; }
+.mode-scroll .cmd-card {
+  padding: 14px 18px;
+  border-radius: 18px;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+.mode-scroll .cmd-card .ribbon {
+  position: static;
+  border-radius: 999px;
+  padding: 3px 9px 4px;
+  font-size: 9px;
+  letter-spacing: .18em;
+  box-shadow: none;
+}
+.mode-scroll .cmd-card .body { margin-top: 0; }
+.mode-scroll .cmd-card .name { font-size: 16px; white-space: nowrap; }
+.mode-scroll .cmd-card .desc { font-size: 12.5px; max-width: 36ch; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+.mode-scroll .cmd-card .pictogram { width: 44px; height: 44px; border-radius: 12px; }
+.mode-scroll .cmd-card .pictogram svg { width: 24px; height: 24px; }
+.mode-scroll .cmd-card .progress, .mode-scroll .cmd-card .progress-label, .mode-scroll .cmd-card .pin { display: none; }
+
+@keyframes marquee {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
+/* ============================================================
+   MODE: COMPACT  (single thin pill)
+   ============================================================ */
+
+.mode-compact .panel { max-width: 560px; }
+.mode-compact .panel-bar { display: none; }
+.mode-compact .stack { min-height: 0; position: relative; }
+
+.mode-compact .cmd-card {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .45s, transform .45s;
+}
+.mode-compact .cmd-card.is-active { opacity: 1; transform: translateY(0); position: relative; }
+.mode-compact .cmd-card .ribbon {
+  position: static;
+  border-radius: 999px;
+  padding: 3px 9px 4px;
+  font-size: 9px;
+  letter-spacing: .16em;
+  box-shadow: none;
+  align-self: center;
+}
+.mode-compact .cmd-card .body { margin-top: 0; gap: 0; flex: 1; min-width: 0; }
+.mode-compact .cmd-card .name { font-size: 15px; }
+.mode-compact .cmd-card .desc { font-size: 12.5px; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; max-width: none; }
+.mode-compact .cmd-card .pictogram, .mode-compact .cmd-card .pin, .mode-compact .cmd-card .progress, .mode-compact .cmd-card .progress-label { display: none; }
+.mode-compact .stack { min-height: 64px; }
+
+/* ============================================================
+   ENTRY ANIMATIONS — initial widget mount
+   ============================================================ */
+
+.panel { animation: panelIn .8s cubic-bezier(.2,.9,.25,1) both; }
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   v2 — Live chat pulse, peek, category banner, cotd, hotkey-hide
+   ============================================================ */
+
+/* ---------- Pulse-on-use (chat detected the command) ---------- */
+.cmd-card.is-pulsed {
+  animation: cmdPulse 1.4s cubic-bezier(.2,.9,.25,1);
+}
+@keyframes cmdPulse {
+  0%   { transform: scale(1);    box-shadow: var(--card-shadow); }
+  18%  { transform: scale(1.025); box-shadow: var(--card-shadow), 0 0 36px 4px rgba(var(--glow), .9); }
+  60%  { transform: scale(1.005); box-shadow: var(--card-shadow), 0 0 24px 2px rgba(var(--glow), .55); }
+  100% { transform: scale(1);    box-shadow: var(--card-shadow); }
+}
+/* burst ring */
+.cmd-card.is-pulsed::after {
+  content: '';
+  position: absolute; inset: -2px;
+  border-radius: 28px;
+  border: 2px solid rgba(var(--glow), .8);
+  pointer-events: none;
+  animation: pulseRing 1.4s cubic-bezier(.2,.9,.25,1);
+}
+@keyframes pulseRing {
+  0%   { opacity: .9; transform: scale(.99); }
+  100% { opacity: 0;  transform: scale(1.08); }
+}
+
+/* ---------- Coming-up peek row ---------- */
+.peek-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 6px;
+  flex-wrap: wrap;
+  margin-top: -4px;
+  animation: peekIn .55s cubic-bezier(.2,.9,.25,1) both;
+}
+@keyframes peekIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: .85; transform: translateY(0); }
+}
+.peek-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 8px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--paper-2) 70%, transparent);
+  border: 1px solid color-mix(in oklab, var(--line) 60%, transparent);
+  color: var(--ink-soft);
+  max-width: 320px;
+  min-width: 0;
+}
+.peek-chip .ic {
+  width: 18px; height: 18px;
+  display: grid; place-items: center;
+  color: var(--accent);
+}
+.peek-chip .ic svg { width: 14px; height: 14px; }
+.peek-chip .t {
+  display: flex; align-items: baseline; gap: 6px;
+  min-width: 0; overflow: hidden;
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.peek-chip .t b {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 11px;
+}
+.peek-chip .t em {
+  font-style: normal;
+  color: var(--ink-mute);
+  font-size: 10.5px;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.peek-chip::before {
+  content: '↪';
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+  margin-right: 2px;
+}
+
+/* ---------- Category banner (briefly appears between groups) ---------- */
+.category-banner {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-12px);
+  padding: 5px 14px 6px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+  white-space: nowrap;
+  transition: opacity .35s, transform .45s cubic-bezier(.2,.9,.25,1);
+  box-shadow: 0 10px 24px -10px rgba(0,0,0,.35);
+}
+[data-theme="night-glow"] .category-banner { background: var(--accent); color: #0d0822; }
+.category-banner.is-on {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-22px);
+  animation: catBannerOut 2.4s ease forwards;
+}
+@keyframes catBannerOut {
+  0%, 60% { opacity: 1; transform: translateX(-50%) translateY(-22px); }
+  100%    { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+/* ---------- Command-of-day tag (positioned so it doesn't collide with the
+   top-right progress arc — sits centered across the card top instead) ---------- */
+.cmd-card .cotd-tag {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px 6px;
+  border-radius: 0 0 12px 12px;
+  background: var(--accent-2);
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 18px -6px rgba(var(--glow), .6);
+}
+[data-theme="night-glow"] .cmd-card .cotd-tag { color: #15102a; }
+.cmd-card[data-cotd="true"]::before {
+  background:
+    radial-gradient(60% 80% at 100% 0%, rgba(var(--glow), .35) 0%, transparent 60%),
+    radial-gradient(70% 80% at 0% 100%, rgba(var(--glow), .22) 0%, transparent 60%);
+}
+
+/* ---------- Uses tag (live count) ---------- */
+.cmd-card .uses-tag {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  background: color-mix(in oklab, var(--paper-2) 80%, transparent);
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--line) 50%, transparent);
+}
+.mode-grid .cmd-card .uses-tag {
+  position: static;
+  align-self: end;
+  margin-top: auto;
+}
+
+/* ---------- Live status badge (shown when chat connected) ---------- */
+.live-badge {
+  position: fixed;
+  top: 16px; right: 16px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--paper) 88%, transparent);
+  border: 1px solid color-mix(in oklab, var(--line) 60%, transparent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  z-index: 999;
+  box-shadow: 0 8px 24px -10px rgba(0,0,0,.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.live-badge[data-status="connected"] { color: var(--accent); }
+.live-badge[data-status="error"]     { color: #c33; }
+.live-badge[data-status="disconnected"] { color: var(--ink-mute); }
+
+/* ---------- Hidden state (for hotkey toggle) ---------- */
+.panel.is-hidden {
+  opacity: 0 !important;
+  transform: translateY(-12px) scale(.97) !important;
+  pointer-events: none !important;
+  transition: opacity .4s ease, transform .4s ease !important;
+}
+
+/* ============================================================
+   Per-category entrance variants
+   Applied when a card enters with .is-active in rotating mode
+   ============================================================ */
+.mode-rotating .cmd-card.is-active.cat-fun     { animation: enterBloom .6s cubic-bezier(.2,.9,.25,1); }
+.mode-rotating .cmd-card.is-active.cat-points  { animation: enterSlideUp .55s cubic-bezier(.2,.9,.25,1); }
+.mode-rotating .cmd-card.is-active.cat-games   { animation: enterFlip .65s cubic-bezier(.2,.9,.25,1); }
+.mode-rotating .cmd-card.is-active.cat-music   { animation: enterDrift .65s cubic-bezier(.2,.9,.25,1); }
+.mode-rotating .cmd-card.is-active.cat-info    { animation: enterFade .55s cubic-bezier(.2,.9,.25,1); }
+.mode-rotating .cmd-card.is-active.cat-other   { animation: enterFade .55s cubic-bezier(.2,.9,.25,1); }
+
+@keyframes enterBloom {
+  from { opacity: 0; transform: scale(.92) rotate(-1.5deg); filter: blur(4px); }
+  to   { opacity: 1; transform: scale(1)    rotate(0);      filter: blur(0); }
+}
+@keyframes enterSlideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes enterFlip {
+  from { opacity: 0; transform: perspective(800px) rotateX(-12deg) translateY(12px); transform-origin: top center; }
+  to   { opacity: 1; transform: perspective(800px) rotateX(0)      translateY(0); }
+}
+@keyframes enterDrift {
+  from { opacity: 0; transform: translateX(-14px) translateY(8px); }
+  to   { opacity: 1; transform: translateX(0)     translateY(0); }
+}
+@keyframes enterFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

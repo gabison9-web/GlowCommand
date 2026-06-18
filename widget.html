@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" data-theme="pastel-dream">
+<head>
+  <meta charset="utf-8" />
+  <title>Command Panel — Smart Command Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="assets/styles.css" />
+  <style>
+    /* OBS browser source: fully transparent canvas */
+    html, body { background: transparent; }
+    .stage { padding: 18px; }
+  </style>
+</head>
+<body>
+  <div class="stage" id="stage" data-bg="transparent">
+    <!-- engine renders here -->
+  </div>
+
+  <script src="assets/icons.js"></script>
+  <script src="assets/widget.js"></script>
+  <script>
+    /* Default mount — override via URL: ?theme=night-glow&mode=grid&rotation=5 */
+    window.CommandPanel.mount('#stage', {});
+  </script>
+</body>
+</html>
